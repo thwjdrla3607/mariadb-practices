@@ -6,7 +6,9 @@
 2. 데이터베이스 생성
 '''sh
 MariaDB [(none)]> create database local;
-MariaDB [(none)]> show databases;ll
+MariaDB [(none)]> show databases;
+
+억까심하네요ㅕ
 '''
 
 3. 사용자 생성
