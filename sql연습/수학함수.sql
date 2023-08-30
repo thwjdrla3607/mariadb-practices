@@ -27,6 +27,7 @@ select sign(20), sign(-100), sign(0) from dual;
 -- greatest(x, y, ....), least(x, y, ....): 최대 최소
 select greatest(10, 40, 20, 50, 30), least(10, 40, 20, 50, 30) from dual;
 select greatest('A', 'C', 'X', 'O', 'N'), least('hello', 'hela', 'hell') from dual;
+-- hi
  
 
  
