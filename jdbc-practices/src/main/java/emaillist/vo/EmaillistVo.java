@@ -3,7 +3,7 @@ package emaillist.vo;
 public class EmaillistVo {
 	private Long no;
 	private String firstName;
-	private String LastName;
+	private String lastName;
 	private String email;
 	public Long getNo() {
 		return no;
@@ -18,10 +18,10 @@ public class EmaillistVo {
 		this.firstName = firstName;
 	}
 	public String getLastName() {
-		return LastName;
+		return lastName;
 	}
 	public void setLastName(String lastName) {
-		LastName = lastName;
+		this.lastName = lastName;
 	}
 	public String getEmail() {
 		return email;
@@ -29,6 +29,9 @@ public class EmaillistVo {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
+	@Override
+	public String toString() {
+		return "EmaillistVo [no=" + no + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ "]";
+	}	
 }

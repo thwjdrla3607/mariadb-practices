@@ -1,4 +1,4 @@
-package hr.dao.dao;
+package bookshop.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,12 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import hr.dao.vo.EmployeesVo;
+import bookshop.vo.BookVo;
 
-public class EmployeesDao {
-
-	public List<EmployeesVo> findByName(String keyword) {
-		List<EmployeesVo> result = new ArrayList<>();
+public class BookDao {
+	public List<BookVo> findByName(String keyword) {
+		List<BookVo> result = new ArrayList<>();
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -25,7 +24,7 @@ public class EmployeesDao {
 			
 			//2. 연결하기
 			String url = "jdbc:mariadb://192.168.0.185:3307/employees?charset=utf8";
-			conn = DriverManager.getConnection(url, "hr", "hr");
+			conn = DriverManager.getConnection(url, "webdb", "webdb");
 
 			//3. SQL 준비
 			String sql =
@@ -48,7 +47,7 @@ public class EmployeesDao {
 				String firstName = rs.getString(2);
 				String lastName = rs.getString(3);
 				
-				EmployeesVo vo = new EmployeesVo();
+				BookVo vo = new BookVo();
 				vo.setEmpNo(empNo);
 				vo.setFirstName(firstName);
 				vo.setLastName(lastName);
@@ -80,8 +79,8 @@ public class EmployeesDao {
 		return result;
 	}
 
-	public List<EmployeesVo> findBySalary(int minSalary, int maxSalary) {
-		List<EmployeesVo> result = new ArrayList<>();
+	public List<BookVo> findBySalary(int minSalary, int maxSalary) {
+		List<BookVo> result = new ArrayList<>();
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -93,7 +92,7 @@ public class EmployeesDao {
 			
 			//2. 연결하기
 			String url = "jdbc:mariadb://192.168.0.185:3307/employees?charset=utf8";
-			conn = DriverManager.getConnection(url, "webdb", "webdb");
+			conn = DriverManager.getConnection(url, "hr", "hr");
 
 			//3. SQL 준비
 			String sql =

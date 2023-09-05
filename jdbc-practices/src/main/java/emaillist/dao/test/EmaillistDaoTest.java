@@ -9,33 +9,28 @@ public class EmaillistDaoTest {
 
 	public static void main(String[] args) {
 		EmaillistVo vo = new EmaillistVo();
-		vo.setFisrtName("둘");
-		vo.setLastName("리");
-		vo.setEmail("dooly@gmail.com");
+		vo.setFirstName("둘");
+		vo.setLastName("리3");
+		vo.setEmail("dooly3@gmail.com");
 		
 		testInsert(vo);
 		testFindAll();
-		testDeleteByEmail("dooly@gmail.com");
-		testFindAll(;)
-		
-
+		testDeleteByEmail("dooly3@gmail.com");
+		testFindAll();
 	}
 
-	private static void testDeleteByEmail(String string) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private static void testInsert(EmaillistVo vo) {
-		// TODO Auto-generated method stub
-		
+	private static void testDeleteByEmail(String email) {
+		new EmaillistDao().deleteByEmail(email);
 	}
 
 	private static void testFindAll() {
 		List<EmaillistVo> list = new EmaillistDao().findAll();
-		for(EmaillistVO vo : list) {
+		for(EmaillistVo vo : list) {
 			System.out.println(vo);
 		}
 	}
 
+	private static void testInsert(EmaillistVo vo) {
+		new EmaillistDao().insert(vo);
+	}
 }
