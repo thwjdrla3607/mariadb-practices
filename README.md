@@ -1,1 +1,0 @@
-# mariadb-practices
