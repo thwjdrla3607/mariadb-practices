@@ -12,7 +12,7 @@ public class EmaillistDaoTest {
 		vo.setFirstName("둘");
 		vo.setLastName("리3");
 		vo.setEmail("dooly3@gmail.com");
-		
+
 		testInsert(vo);
 		testFindAll();
 		testDeleteByEmail("dooly3@gmail.com");
