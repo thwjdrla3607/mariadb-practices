@@ -8,86 +8,60 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo.MemberVo;
+import bookmall.vo.CategoryVo;
 
-public class MemberDao {
-	public void insert(MemberVo vo) {
+public class CategoryDao {
+
+	public void insert(CategoryVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-
+		
 		try {
 			conn = getConnection();
 
-			String sql = "insert into member values(null, ?, ?, ?, ?)";
+			String sql = "insert into category values(null, ?)";
 			pstmt = conn.prepareStatement(sql);
-
-			pstmt.setString(1, vo.getName());
-			pstmt.setString(2, vo.getPhoneNumber());
-			pstmt.setString(3, vo.getEmail());
-			pstmt.setString(4, vo.getPassword());
-
+			pstmt.setString(1, vo.getCategoryName());
 			pstmt.executeQuery();
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				if(pstmt != null) {
+				if(pstmt != null) 
 					pstmt.close();
-				}
-				if(conn != null) {
+				if(conn != null) 
 					conn.close();
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public List<MemberVo> findAll() {
-		List<MemberVo> result = new ArrayList<>();
-
+	public List<CategoryVo> findAll() {
+		List<CategoryVo> result = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
 		try {
 			conn = getConnection();
-
-			// SQL 준비
-			String sql = "select no, name, phoneNumber, email, password from member";
+			
+			String sql = "select no, categoryName from category";
 			pstmt = conn.prepareStatement(sql);
 
-			// SQL 실행
 			rs = pstmt.executeQuery();
-
-			// 결과 처리
-			while(rs.next()) {
-				int no = rs.getInt(1);
-				String name = rs.getString(2);
-				String phoneNumber = rs.getString(3);
-				String email = rs.getString(4);
-				String password = rs.getString(5);
-
-				MemberVo vo = new MemberVo(name, phoneNumber, email, password);
-				vo.setNo(no);
-
-				result.add(vo);
-			}
-
+			while(rs.next()) 
+				result.add(new CategoryVo(rs.getInt(1), rs.getString(2)));
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				// 자원정리
-				if(rs != null) {
+				if(rs != null) 
 					rs.close();
-				}
-				if(pstmt != null) {
+				if(pstmt != null) 
 					pstmt.close();
-				}
-				if(conn != null) {
+				if(conn != null) 
 					conn.close();
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -95,7 +69,7 @@ public class MemberDao {
 
 		return result;
 	}
-
+	
 	public void deleteByNo(int no) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;

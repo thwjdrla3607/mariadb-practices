@@ -8,86 +8,89 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo.MemberVo;
+import bookmall.vo.BookVo;
 
-public class MemberDao {
-	public void insert(MemberVo vo) {
+public class BookDao {
+
+	public void insert(BookVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		PreparedStatement pstmt2 = null;
+		ResultSet rs = null;
 
 		try {
+			int categoryNumber = 0;
 			conn = getConnection();
-
-			String sql = "insert into member values(null, ?, ?, ?, ?)";
+			
+			String sql = "select no from category where categoryName = ?";
 			pstmt = conn.prepareStatement(sql);
-
-			pstmt.setString(1, vo.getName());
-			pstmt.setString(2, vo.getPhoneNumber());
-			pstmt.setString(3, vo.getEmail());
-			pstmt.setString(4, vo.getPassword());
-
-			pstmt.executeQuery();
+			pstmt.setString(1, vo.getCategoryName());
+			
+			rs = pstmt.executeQuery();
+			if (rs.next())
+				categoryNumber = rs.getInt(1);
+			
+			sql = "insert into book values(null, ?, ?, ?)";
+			pstmt2 = conn.prepareStatement(sql);
+			pstmt2.setString(1, vo.getTitle());
+			pstmt2.setInt(2, vo.getPrice());
+			pstmt2.setInt(3, categoryNumber);
+			pstmt2.executeQuery();
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				if(pstmt != null) {
+				if(pstmt != null) 
 					pstmt.close();
-				}
-				if(conn != null) {
+				if(pstmt2 != null) 
+					pstmt2.close();
+				if(conn != null) 
 					conn.close();
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public List<MemberVo> findAll() {
-		List<MemberVo> result = new ArrayList<>();
-
+	public List<BookVo> findAll() {
+		List<BookVo> result = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		PreparedStatement pstmt2 = null;
 		ResultSet rs = null;
+		ResultSet rs2 = null;
 
 		try {
 			conn = getConnection();
 
-			// SQL 준비
-			String sql = "select no, name, phoneNumber, email, password from member";
+			String sql = "select no, title, price, category_no from book";
 			pstmt = conn.prepareStatement(sql);
 
-			// SQL 실행
 			rs = pstmt.executeQuery();
-
-			// 결과 처리
 			while(rs.next()) {
-				int no = rs.getInt(1);
-				String name = rs.getString(2);
-				String phoneNumber = rs.getString(3);
-				String email = rs.getString(4);
-				String password = rs.getString(5);
-
-				MemberVo vo = new MemberVo(name, phoneNumber, email, password);
-				vo.setNo(no);
-
-				result.add(vo);
+				String categoryName = "";
+				sql = "select categoryName from category where no = ?";
+				pstmt2 = conn.prepareStatement(sql);
+				pstmt2.setInt(1, rs.getInt(4));
+				rs2 = pstmt2.executeQuery();
+				if (rs2.next())
+					categoryName = rs2.getString(1);
+				
+				result.add(new BookVo(rs.getInt(1), 
+						rs.getString(2), 
+						rs.getInt(3), 
+						categoryName));
 			}
-
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				// 자원정리
-				if(rs != null) {
+				if(rs != null) 
 					rs.close();
-				}
-				if(pstmt != null) {
+				if(pstmt != null) 
 					pstmt.close();
-				}
-				if(conn != null) {
+				if(conn != null) 
 					conn.close();
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -95,7 +98,7 @@ public class MemberDao {
 
 		return result;
 	}
-
+	
 	public void deleteByNo(int no) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -112,12 +115,10 @@ public class MemberDao {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				if(pstmt != null) {
+				if(pstmt != null) 
 					pstmt.close();
-				}
-				if(conn != null) {
+				if(conn != null) 
 					conn.close();
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
