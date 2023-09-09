@@ -14,6 +14,7 @@ public class OrdersBookDao {
 
 	public List<OrdersBookVo> findAll() {
 		List<OrdersBookVo> result = new ArrayList<>();
+		List<String> resultString = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt2 = null;
@@ -25,27 +26,33 @@ public class OrdersBookDao {
 		try {
 			conn = getConnection();
 
-			String sql = "select cart_no from orders";
+			String sql = "select member_no from orders";
 			pstmt = conn.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
-				int cart_no = rs.getInt(1);;
+				int member_no = rs.getInt(1);;
 				int bookNumber = 0;
 
-				sql = "select book_no from cart where no = ?";
+				sql = "select book_no from cart where member_no = ?";
 				pstmt2 = conn.prepareStatement(sql);
-				pstmt2.setInt(1, cart_no);
+				pstmt2.setInt(1, member_no);
 				rs2 = pstmt2.executeQuery();
-				if (rs2.next())
+				while (rs2.next()) {
 					bookNumber = rs2.getInt(1);
 				
-				sql = "select title from book where no = ?";
-				pstmt3 = conn.prepareStatement(sql);
-				pstmt3.setInt(1, bookNumber);
-				rs3 = pstmt3.executeQuery();
-				if (rs3.next())
-					result.add(new OrdersBookVo(rs3.getString(1)));
+					sql = "select title from book where no = ?";
+					pstmt3 = conn.prepareStatement(sql);
+					pstmt3.setInt(1, bookNumber);
+					rs3 = pstmt3.executeQuery();
+					if (rs3.next()) {
+						String bookName = rs3.getString(1);
+						if (resultString.contains(bookName) == false) {
+							resultString.add(bookName);
+							result.add(new OrdersBookVo(bookName));
+						}
+					}
+				}
 			}
 		} catch (SQLException e) {
 			System.out.println("error:" + e);

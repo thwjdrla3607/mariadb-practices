@@ -6,13 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import bookmall.vo.OrdersVo;
 
 public class OrdersDao {
 	int memberNumber;
-	int cartNumber;
 	int totalPrice;
 	
 	public void getMemberNumber(String name) {
@@ -46,37 +46,6 @@ public class OrdersDao {
 		}
 	}
 	
-	public void getCartNumber() {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		try {
-			conn = getConnection();
-
-			String sql = "select no from cart where member_no = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, memberNumber);
-			
-			rs = pstmt.executeQuery();
-			if (rs.next())
-				cartNumber = rs.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(rs != null)
-					rs.close();
-				if(pstmt != null) 
-					pstmt.close();
-				if(conn != null) 
-					conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	public void getTotalPrice() {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -87,9 +56,9 @@ public class OrdersDao {
 		try {
 			conn = getConnection();
 
-			String sql = "select book_no, count from cart where no = ?";
+			String sql = "select book_no, count from cart where member_no = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, cartNumber);
+			pstmt.setInt(1, memberNumber);
 			
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -99,13 +68,12 @@ public class OrdersDao {
 				sql = "select price from book where no = ?";
 				pstmt2 = conn.prepareStatement(sql);
 				pstmt2.setInt(1, bookNumber);
-				
 				rs2 = pstmt2.executeQuery();
 				int price = 0;
-				if (rs2.next())
+				while (rs2.next()) {
 					price = rs2.getInt(1);
-				
-				totalPrice += price * count;
+					totalPrice += price * count;
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -133,19 +101,17 @@ public class OrdersDao {
 		ResultSet rs = null;
 		
 		this.getMemberNumber(vo.getMemberName());
-		this.getCartNumber();
 		this.getTotalPrice();
 		
 		try {			
 			conn = getConnection();
-
-			String sql = "insert into orders values(null, ?, ?, ?, ?, ?)";
+			
+			String sql = "insert into orders values(null, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);		
 			pstmt.setInt(1, totalPrice); 
 			pstmt.setString(2, vo.getAddress());
 			pstmt.setString(3, vo.getOrdersCode());
 			pstmt.setInt(4, memberNumber);
-			pstmt.setInt(5, cartNumber);
 			pstmt.executeQuery();
 		} catch (SQLException e) {
 			System.out.println("error:" + e);

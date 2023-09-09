@@ -24,7 +24,7 @@ public class OrdersVo {
 	public OrdersVo(int no, int totalPrice, String address, String ordersCode, String memberName) {
 		this.no = no;
 		this.totalPrice = totalPrice;
-		this.memberName = memberName;
+		this.ordersCode = ordersCode;
 		this.address = address;
 		this.memberName = memberName;
 	}

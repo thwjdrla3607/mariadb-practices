@@ -20,11 +20,11 @@ import bookmall.dao.OrdersBookDao;
 public class BookMall {
 
 	static void init() {
-		//createMember();
-		//createCategory();
-		//createBook();
-		//createCart();
-		//createOrders();
+		createMember();
+		createCategory();
+		createBook();
+		createCart();
+		createOrders();
 	}	
 	
 	static void createMember() {
@@ -108,7 +108,7 @@ public class BookMall {
 	}
 	
 	public static void main(String[] args) {
-		init();
+		//init();
 		
 		System.out.println("## 회원리스트");
 		readMember();
